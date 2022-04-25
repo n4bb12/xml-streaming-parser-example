@@ -1,5 +1,5 @@
 import { events } from "./events"
-import { XMLObject } from "./xmlStreamingParser"
+import { XMLObject } from "./xmlParser"
 
 export type Product = {
   sku: string

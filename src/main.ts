@@ -2,14 +2,14 @@ import fs from "fs"
 import { doSomethingWithProducts } from "./doSomethingWithProducts"
 import { events } from "./events"
 import { mapXmlProducts } from "./mapXmlProducts"
-import { parser } from "./xmlStreamingParser"
+import { xmlParser } from "./xmlParser"
 
 async function main() {
   mapXmlProducts()
   doSomethingWithProducts()
 
   fs.createReadStream("products.xml")
-    .pipe(parser)
+    .pipe(xmlParser)
     .on("finish", () => {
       events.emit("done")
       console.log("done")
