@@ -12,10 +12,17 @@ export type XMLObject = {
   childrenByName?: Record<string, XMLObject>
 }
 
+let foundRootElement = false
 let currentNode: XMLObject | undefined
 
 const callbacks: Partial<Handler> = {
   onopentag(name, attributes, isImplied) {
+    // Discard the root node as this would equate to eventually holding the entire file in memory.
+    if (!foundRootElement) {
+      foundRootElement = true
+      return
+    }
+
     const openedNode: XMLObject = {
       name,
       attributes,
