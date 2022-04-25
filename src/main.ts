@@ -10,10 +10,7 @@ async function main() {
 
   fs.createReadStream("products.xml")
     .pipe(xmlParser)
-    .on("finish", () => {
-      events.emit("done")
-      console.log("done")
-    })
+    .on("finish", () => events.emit("finish"))
 }
 
 main().catch((error) => {
