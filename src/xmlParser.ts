@@ -1,3 +1,5 @@
+import { ParserOptions } from "htmlparser2"
+import { Handler } from "htmlparser2/lib/Parser"
 import { WritableStream } from "htmlparser2/lib/WritableStream"
 import { events } from "./events"
 
@@ -6,39 +8,47 @@ export type XMLObject = {
   attributes: Record<string, string>
   text?: string
   parent?: XMLObject
-  childrenByName?: Record<string, XMLObject>
   children?: XMLObject[]
+  childrenByName?: Record<string, XMLObject>
 }
 
-let parentNode: XMLObject | undefined
+let currentNode: XMLObject | undefined
 
-export const parser = new WritableStream(
-  {
-    onopentag(name, attributes, isImplied) {
-      const node: XMLObject = {
-        name,
-        attributes,
-      }
-      if (parentNode) {
-        node.parent = parentNode
+const callbacks: Partial<Handler> = {
+  onopentag(name, attributes, isImplied) {
+    const openedNode: XMLObject = {
+      name,
+      attributes,
+    }
 
-        parentNode.children = parentNode.children || []
-        parentNode.children.push(node)
+    if (currentNode) {
+      // Keep a reference to the parent so we can emit events once the object has finished parsing.
+      openedNode.parent = currentNode
 
-        parentNode.childrenByName = parentNode.childrenByName || {}
-        parentNode.childrenByName[name] = node
-      }
-      parentNode = node
-    },
-    ontext(text) {
-      if (parentNode) {
-        parentNode.text = text
-      }
-    },
-    onclosetag(name, isImplied) {
-      events.emit(`XML${name}`, parentNode)
-      parentNode = parentNode?.parent
-    },
+      currentNode.children = currentNode.children || []
+      currentNode.children.push(openedNode)
+
+      currentNode.childrenByName = currentNode.childrenByName || {}
+      currentNode.childrenByName[name] = openedNode
+    }
+
+    currentNode = openedNode
   },
-  { xmlMode: true }
-)
+
+  ontext(text) {
+    if (currentNode) {
+      currentNode.text = text
+    }
+  },
+
+  onclosetag(name, isImplied) {
+    events.emit(`XML${name}`, currentNode)
+    currentNode = currentNode?.parent
+  },
+}
+
+const options: ParserOptions = {
+  xmlMode: true,
+}
+
+export const xmlParser = new WritableStream(callbacks, options)
