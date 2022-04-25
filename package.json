@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json.schemastore.org/package",
+  "name": "xml-streaming-parser-example",
+  "version": "0.0.0-development",
+  "private": true,
+  "description": "An example of how XML streaming can be simplified by composing higher-level events from low-level XML events.",
+  "keywords": [
+    "xml",
+    "streaming"
+  ],
+  "homepage": "https://github.com/n4bb12/xml-streaming-parser-example/blob/master/README.md",
+  "bugs": "https://github.com/n4bb12/xml-streaming-parser-example/issues",
+  "repository": "github:n4bb12/xml-streaming-parser-example",
+  "license": "ISC",
+  "author": "Abraham Schilling",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/main",
+    "start": "node dist/main",
+    "format": "prettier --ignore-path .gitignore --write ."
+  },
+  "dependencies": {
+    "events": "^3.3.0",
+    "htmlparser2": "^7.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.27",
+    "prettier": "^2.6.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.3"
+  }
+}

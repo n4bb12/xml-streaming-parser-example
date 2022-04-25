@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "lib": ["ES2021"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "target": "ES2021",
+    "types": []
+  },
+  "include": ["src"]
+}
